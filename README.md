@@ -1,3 +1,5 @@
+[![tests](https://github.com/landry-kapgnep/distributed-llm-inference/actions/workflows/test.yml/badge.svg)](https://github.com/landry-kapgnep/distributed-llm-inference/actions/workflows/test.yml)
+
 # distributed-llm-inference
 
 I built this to understand how pipeline parallelism works under the surface. The idea is to take a language model, split it across multiple machines and run inference over gRPC. Each worker contains a part of the transformer layers and a coordinator sends tokens through the pipeline.
@@ -80,6 +82,18 @@ src/worker.py           gRPC server hosting one pipeline stage
 src/coordinator.py      autoregressive generation over the workers
 tests/                  equivalence tests (split output == monolithic output)
 ```
+
+## Performance
+
+Quick benchmark on CPU (GPT-2 124M, 30 tokens generated):
+
+| setup | tokens/s |
+|---|---|
+| monolithic model | ~26 |
+| 2-stage split (in-process) | ~28 |
+| 2-stage split (gRPC, localhost) | ~19 |
+
+The split itself adds no overhead compared to the full model. The gRPC cost comes from serializing the hidden states and sending them through the network (~60 KB per step for a short sequence). On real machines with a proper network this would depend on bandwidth and latency.
 
 ## Notes
 
