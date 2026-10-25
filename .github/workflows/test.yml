@@ -23,10 +23,12 @@ jobs:
           key: hf-gpt2
 
       - name: Install dependencies
-        run: pip install .[dev]
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers grpcio grpcio-tools numpy pytest
 
       - name: Generate proto stubs
         run: python scripts/gen_proto.py
 
       - name: Run tests
-        run: python -m pytest tests/ -v
+        run: python -m pytest tests/ -v --tb=short
