@@ -1,0 +1,12 @@
+services:
+  worker-0:
+    build: .
+    command: ["--stage", "0", "--stages", "2", "--port", "50051"]
+    ports:
+      - "50051:50051"
+
+  worker-1:
+    build: .
+    command: ["--stage", "1", "--stages", "2", "--port", "50052"]
+    ports:
+      - "50052:50052"

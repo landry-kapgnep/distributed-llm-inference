@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pipeline;
+
+service Worker {
+    rpc Forward(Tensor) returns (Tensor);
+    rpc Ping(Empty) returns (WorkerInfo);
+}
+
+message Tensor {
+    bytes data = 1;
+    repeated int64 shape = 2;
+    string dtype = 3;
+}
+
+message Empty {}
+
+message WorkerInfo {
+    int32 stage = 1;
+    int32 layer_start = 2;
+    int32 layer_end = 3;
+    string model = 4;
+}

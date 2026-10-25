@@ -1,0 +1,17 @@
+[project]
+name = "distributed-llm-inference"
+version = "0.1.0"
+description = "Pipeline-parallel LLM inference over gRPC"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "transformers>=4.30",
+    "grpcio>=1.60",
+    "grpcio-tools>=1.60",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
