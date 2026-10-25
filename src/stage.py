@@ -42,7 +42,8 @@ class GPT2Stage(nn.Module):
             x = self.drop(x)
 
         for block in self.blocks:
-            x = block(x)[0]
+            out = block(x)
+            x = out[0] if isinstance(out, tuple) else out
 
         if self.is_last:
             x = self.ln_f(x)
