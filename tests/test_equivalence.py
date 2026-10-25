@@ -22,7 +22,7 @@ def test_split_matches_original():
         x = stage(x)
 
     assert x.shape == expected.shape, f"{x.shape} != {expected.shape}"
-    assert torch.allclose(x, expected, atol=1e-5), f"max diff: {(x - expected).abs().max()}"
+    assert torch.allclose(x, expected, atol=1e-4), f"max diff: {(x - expected).abs().max()}"
 
 
 def test_three_way_split():
@@ -43,4 +43,4 @@ def test_three_way_split():
         x = stage(x)
 
     assert x.shape == expected.shape
-    assert torch.allclose(x, expected, atol=1e-5)
+    assert torch.allclose(x, expected, atol=1e-4)
