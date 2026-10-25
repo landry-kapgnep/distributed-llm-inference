@@ -16,19 +16,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cache HuggingFace models
+      - name: Cache pip and HuggingFace
         uses: actions/cache@v4
         with:
-          path: ~/.cache/huggingface
-          key: hf-gpt2
+          path: |
+            ~/.cache/pip
+            ~/.cache/huggingface
+          key: deps-${{ runner.os }}-py3.11
 
       - name: Install dependencies
-        run: |
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install transformers grpcio grpcio-tools numpy pytest
+        run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install transformers grpcio grpcio-tools numpy pytest
 
       - name: Generate proto stubs
         run: python scripts/gen_proto.py
 
+      - name: Verify imports
+        run: |
+          python -c "import torch; print('torch', torch.__version__)"
+          python -c "from src.stage import GPT2Stage; print('stage OK')"
+          python -c "from src.serialize import encode, decode; print('serialize OK')"
+
       - name: Run tests
-        run: python -m pytest tests/ -v --tb=short
+        run: python -m pytest tests/ -v --tb=long -s
